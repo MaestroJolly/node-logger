@@ -4,6 +4,15 @@ const express = require('express');
 const PORT = process.env.PORT || '3030';
 const app = express();
 const winston = require('winston');
+var {Loggly} = require('winston-loggly-bulk');
+
+winston.add(new Loggly({
+    token: "8b356096-ae55-428e-bb91-d486e81a0244",
+    subdomain: "https://yusufjolaoso.loggly.com",
+    tags: ["Winston-NodeJS"],
+    json: true
+}));
+
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.combine(
@@ -36,6 +45,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 app.get('*', (req, res) => {
     logger.info('info', req);
+    winston.log('info', 'Hello World');
     res.send({
         'Greetings': 'Hello World!!!'
     });
